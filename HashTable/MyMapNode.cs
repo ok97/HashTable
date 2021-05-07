@@ -41,9 +41,9 @@ namespace HashTable
                 LinkedList<KeyValue<K, V>> linkedList = GetLinkedList(position);
                 foreach (KeyValue<K, V> item in linkedList) //fetch
                 {
-                    if (item.Key.Equals(key)) //Check key same or not
+                    if (item.Key.Equals(key)) //Check key same or not //fetch value
                     {
-                        return item.Value;
+                        return item.Value; // return value
                     }
                 }
             }
@@ -71,6 +71,7 @@ namespace HashTable
 
         public void Add(K key, V value) //Create Add mEthod to adding Key and Value
         {
+           
             try
             {
                 int position = GetArrayPosition(key); // call GaetArrayPosition method
@@ -78,14 +79,16 @@ namespace HashTable
                 KeyValue<K, V> item = new KeyValue<K, V> //Prepared key value pair
                 { Key = key, Value = value }; //Assign key and Value
                 linkedList.AddLast(item); //adding items linked list
-               // Console.WriteLine($"{item.Key}=> { item.Value}"); //print key and item/ value
+              // Console.WriteLine($"{item.Key}=> { item.Value}"); //print key and item/ value
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
 
+
         }
+        
 
         /* UC2:- Ability to find frequency of words in a large paragraph phrase “Paranoids are not 
                      paranoid because they are paranoid but because they keep putting themselves 
@@ -95,7 +98,7 @@ namespace HashTable
                      - Use LinkedList to do the Hash Table Operation.
                      - To do this create MyMapNode with Key Value Pair and create LinkedList of MyMapNode.
             */
-        internal void Set(K key, V value) //createn Set Method
+        public void Set(K key, V value) //createn Set Method
         {
             try
             {
@@ -110,21 +113,79 @@ namespace HashTable
                     }
                 }
                 temp.Value = value;
-
+                
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-        }  
+            
+        }
+
+        /* UC3:-   Remove avoidable word from the phrase “Paranoids are not paranoid because they are paranoid but 
+                   because they keep putting themselves deliberately into paranoid avoidable situations”
+                   - Use LinkedList to do the Hash Table Operation like here the removal of word avoidable.
+                   - To do this create MyMapNode with Key Value Pair and create LinkedList of MyMapNode.
+           */
+
+        public void Remove(K key)
+        {
+            try
+            {
+                int position = GetArrayPosition(key); //find key or position
+                LinkedList<KeyValue<K, V>> linkedList = GetLinkedList(position); //pss key linked list position
+                bool itemFound = false;
+                KeyValue<K, V> foundItem = default(KeyValue<K, V>);
+                foreach (KeyValue<K, V> item in linkedList) //Fetch one by one
+                {
+                    if (item.Key.Equals(key)) //check key exixt or not
+                    {
+                        itemFound = true; //item found then true
+                        foundItem = item;
+                    }
+                }
+                if (itemFound)
+                    linkedList.Remove(foundItem); //Remove key using Remove method
+                Console.WriteLine($"Successfully Remove Key {key} ");
+               Display();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public void Display() //Create Display Method
+        {
+            try
+            {
+                Console.WriteLine("Frequency of Word and Count");
+                foreach (var LinkedList in items) //Iterate linkedList in array
+                {
+                    if (LinkedList != null)
+                    {
+                        foreach (KeyValue<K, V> item in LinkedList) // iterate
+                        {
+                            Console.WriteLine($"{item.Key}=> { item.Value}"); //print key and item/ value
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
     }
     class Run //class
     {
         static void Main(string[] args) //main method
         {
             Console.WriteLine("Hash Table");
-            
-            /*UC1*/
+            MyMapNode<string, int> hashtable = new MyMapNode<string, int>(5);
+            hashtable.Display();
+            ///*UC1*/
             //MyMapNode<string, string> hashtable = new MyMapNode<string, string>(5); //create MyMapNode class object adn passing key and value and size
             //hashtable.Add("0", "To"); //add key and value
             //hashtable.Add("1", "be");
@@ -134,6 +195,7 @@ namespace HashTable
             //hashtable.Add("5", "be");
             //Console.WriteLine("\nShowing Value using Key using Get Method");
             //Console.WriteLine($"{hashtable.Get("3")}"); //show the specific value from hashtable.
+            //hashtable.Remove("5"); //Call Remove method //UC3
 
 
             /* UC2:- Ability to find frequency of words in a large paragraph phrase “Paranoids are not 
@@ -145,11 +207,13 @@ namespace HashTable
                      - To do this create MyMapNode with Key Value Pair and create LinkedList of MyMapNode.
             */
 
-            MyMapNode<string, int> hashtable = new MyMapNode<string, int>(5);
+            //MyMapNode<string, int> hashtable = new MyMapNode<string, int>(5);
             string input = "Paranoids are are not paranoid because they are paranoid but because they \n               keep putting themselves deliberately into paranoid avoidable situations\n";
-            Console.WriteLine($"Statement is:- {input}");
+            Console.WriteLine($"Statement is:- {input}"); 
+            hashtable.Display();
             try
             {
+                
                 string[] inputArray = input.Split(); // split input statement using Split method
 
                 foreach (string word in inputArray) //itterat word in inputArray
@@ -174,6 +238,14 @@ namespace HashTable
             {
                 Console.WriteLine(ex.Message);
             }
+
+            /* UC3:- Remove avoidable word from the phrase “Paranoids are not paranoid because they are paranoid but 
+                     because they keep putting themselves deliberately into paranoid avoidable situations”
+                     - Use LinkedList to do the Hash Table Operation like here the removal of word avoidable.
+                     - To do this create MyMapNode with Key Value Pair and create LinkedList of MyMapNode.
+             */
+            hashtable.Remove("avoidable");
+
             Console.ReadLine();
         }
     }
